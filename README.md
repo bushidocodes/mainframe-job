@@ -9,6 +9,57 @@ In contast to other computer architectures, most work performed on a mainframe i
 # What does Mainframe-Job do?
 mainframe-job is a Node.js module that wrappers the z/OS-specific services made accessible over ftp. This allows direct submission of jobs from Node.js to the z/OS Job Entry Subsystem.
 
+# Installation
+
+```sh
+npm install zos-jes
+```
+
+Requires Node.js 18 or newer.
+
+# Usage
+
+```ts
+import { JobEntrySubsystem } from "zos-jes";
+
+const jes = new JobEntrySubsystem({
+  host: "zos.example.com",
+  user: "IBMUSER",
+  password: "********",
+  // any other basic-ftp AccessOptions, e.g. `secure: true`
+});
+
+const jcl = Buffer.from(
+  [
+    "//IBMUSER JOB ,CLASS=A,MSGCLASS=X",
+    "//RUN     EXEC PGM=IEFBR14",
+  ].join("\r\n"),
+  "ascii",
+);
+
+const output = await jes.submitJob(jcl, "run.jcl");
+console.log(output.toString("ascii"));
+```
+
+`submitJob(input, remoteFileName)` accepts the JCL as a path to a local file
+(`string`), a `Readable` stream, or a `Buffer`, and resolves with the job
+output captured from JES as a `Buffer`. The FTP connection is always closed,
+whether the job succeeds or fails.
+
+A complete, runnable example lives in [`examples/submit-job.ts`](examples/submit-job.ts).
+
+# Development
+
+```sh
+npm install      # install dependencies
+npm run build    # compile TypeScript to dist/
+npm test         # run the unit tests (no mainframe required)
+npm run lint     # lint with ESLint
+```
+
+The unit tests inject a fake FTP client, so the full submission flow is
+verified without a live z/OS host.
+
 # Contributors 🙌 🙌 🙌 🙌
 - Micah Rairdon ([Tiberriver256](https://github.com/Tiberriver256))
 
