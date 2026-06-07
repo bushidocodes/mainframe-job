@@ -36,7 +36,7 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "eslint .",
+    "lint": "eslint . && tsc --project tsconfig.examples.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepublishOnly": "npm run build"
