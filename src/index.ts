@@ -57,9 +57,10 @@ export class JobEntrySubsystem {
     try {
       await client.access(this.connectionOptions);
       // JCL is text; transfer in ASCII so the host performs EBCDIC translation.
+      // SITE must precede the upload so the STOR is handled as a JES submission.
       await client.send("TYPE A");
-      await client.uploadFrom(toUploadSource(input), remoteFileName);
       await client.send("SITE FILEtype=JES NOJESGETBYDSN");
+      await client.uploadFrom(toUploadSource(input), remoteFileName);
       return await downloadToBuffer(client, remoteFileName);
     } finally {
       client.close();
