@@ -83,8 +83,8 @@ describe("JobEntrySubsystem.submitJob", () => {
     expect(client.calls).toEqual([
       "access",
       "send:TYPE A",
-      "uploadFrom:job.jcl",
       "send:SITE FILEtype=JES NOJESGETBYDSN",
+      "uploadFrom:job.jcl",
       "downloadTo:job.jcl",
       "close",
     ]);
