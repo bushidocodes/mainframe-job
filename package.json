@@ -42,7 +42,7 @@
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
-    "basic-ftp": "^5.0.5"
+    "basic-ftp": "^6.0.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
