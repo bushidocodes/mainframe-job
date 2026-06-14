@@ -9,7 +9,7 @@
  *
  * adjusting the connection options below first.
  */
-import { JobEntrySubsystem } from "../src/index";
+import { JobEntrySubsystem } from "../src/index.js";
 
 const connectionOptions = {
   host: "localhost",
@@ -40,10 +40,10 @@ const jclBuffer = Buffer.from(jclTestJob.replace(/\r?\n/g, "\r\n"), "ascii");
 
 jobEntrySubsystem
   .submitJob(jclBuffer, "tsslist.jcl")
-  .then((output) => {
+  .then((output: Buffer) => {
     console.log(output.toString("ascii"));
   })
-  .catch((error) => {
+  .catch((error: unknown) => {
     console.error("Job submission failed:", error);
     process.exitCode = 1;
   });
