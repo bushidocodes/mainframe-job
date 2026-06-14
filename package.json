@@ -11,6 +11,7 @@
     "ftp",
     "ibm"
   ],
+  "type": "module",
   "license": "ISC",
   "repository": {
     "type": "git",
@@ -32,7 +33,7 @@
     "dist"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "scripts": {
     "build": "tsc",
