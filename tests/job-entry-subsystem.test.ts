@@ -54,6 +54,10 @@ class FakeFtpClient implements FtpClient {
     return {};
   }
 
+  [Symbol.dispose](): void {
+    this.close();
+  }
+
   close(): void {
     this.closed = true;
     this.calls.push("close");
