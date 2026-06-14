@@ -38,10 +38,7 @@ class FakeFtpClient implements FtpClient {
     this.maybeFail("uploadFrom");
     this.uploadedSource = source;
     if (typeof source !== "string") {
-      const chunks: Buffer[] = [];
-      for await (const chunk of source) {
-        chunks.push(Buffer.from(chunk));
-      }
+      const chunks = await Array.fromAsync(source, (chunk) => Buffer.from(chunk));
       this.uploadedContents = Buffer.concat(chunks).toString();
     }
     return {};
@@ -50,10 +47,10 @@ class FakeFtpClient implements FtpClient {
   async downloadTo(destination: Writable, remotePath: string): Promise<unknown> {
     this.calls.push(`downloadTo:${remotePath}`);
     this.maybeFail("downloadTo");
-    await new Promise<void>((resolve, reject) => {
-      destination.on("error", reject);
-      destination.end(this.downloadPayload, () => resolve());
-    });
+    const { promise, resolve, reject } = Promise.withResolvers<void>();
+    destination.on("error", reject);
+    destination.end(this.downloadPayload, () => resolve());
+    await promise;
     return {};
   }
 

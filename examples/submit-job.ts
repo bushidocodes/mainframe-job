@@ -38,12 +38,10 @@ const jclTestJob = `
 // JCL must use CRLF line endings on the wire.
 const jclBuffer = Buffer.from(jclTestJob.replace(/\r?\n/g, "\r\n"), "ascii");
 
-jobEntrySubsystem
-  .submitJob(jclBuffer, "tsslist.jcl")
-  .then((output: Buffer) => {
-    console.log(output.toString("ascii"));
-  })
-  .catch((error: unknown) => {
-    console.error("Job submission failed:", error);
-    process.exitCode = 1;
-  });
+try {
+  const output = await jobEntrySubsystem.submitJob(jclBuffer, "tsslist.jcl");
+  console.log(output.toString("ascii"));
+} catch (error: unknown) {
+  console.error("Job submission failed:", error);
+  process.exitCode = 1;
+}
