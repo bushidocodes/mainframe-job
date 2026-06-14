@@ -14,7 +14,7 @@ export interface FtpClient {
   send(command: string): Promise<unknown>;
   uploadFrom(source: Readable | string, remotePath: string): Promise<unknown>;
   downloadTo(destination: Writable, remotePath: string): Promise<unknown>;
-  close(): void;
+  [Symbol.dispose](): void;
 }
 
 /** Connection settings forwarded to the underlying FTP client. */
@@ -40,7 +40,10 @@ export type JobInput = string | Readable | Buffer;
 export class JobEntrySubsystem {
   constructor(
     private readonly connectionOptions: JobEntrySubsystemOptions,
-    private readonly createClient: () => FtpClient = () => new Client(),
+    private readonly createClient: () => FtpClient = () => {
+      const c = new Client();
+      return Object.assign(c, { [Symbol.dispose]: () => c.close() });
+    },
   ) {}
 
   /**
@@ -53,18 +56,14 @@ export class JobEntrySubsystem {
    * @returns The raw job output returned by JES.
    */
   async submitJob(input: JobInput, remoteFileName: string): Promise<Buffer> {
-    const client = this.createClient();
-    try {
-      await client.access(this.connectionOptions);
-      // JCL is text; transfer in ASCII so the host performs EBCDIC translation.
-      // SITE must precede the upload so the STOR is handled as a JES submission.
-      await client.send("TYPE A");
-      await client.send("SITE FILEtype=JES NOJESGETBYDSN");
-      await client.uploadFrom(toUploadSource(input), remoteFileName);
-      return await downloadToBuffer(client, remoteFileName);
-    } finally {
-      client.close();
-    }
+    using client = this.createClient();
+    await client.access(this.connectionOptions);
+    // JCL is text; transfer in ASCII so the host performs EBCDIC translation.
+    // SITE must precede the upload so the STOR is handled as a JES submission.
+    await client.send("TYPE A");
+    await client.send("SITE FILEtype=JES NOJESGETBYDSN");
+    await client.uploadFrom(toUploadSource(input), remoteFileName);
+    return await downloadToBuffer(client, remoteFileName);
   }
 }
 
