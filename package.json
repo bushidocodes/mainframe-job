@@ -32,6 +32,7 @@
   "files": [
     "dist"
   ],
+  "packageManager": "pnpm@11.5.0",
   "engines": {
     "node": ">=22"
   },
@@ -40,7 +41,7 @@
     "lint": "eslint . && tsc --project tsconfig.examples.json",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
     "basic-ftp": "^6.0.1"
