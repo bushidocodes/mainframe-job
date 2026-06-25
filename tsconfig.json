@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "ES2024",
+    "target": "ES2025",
     "module": "NodeNext",
     "moduleResolution": "nodenext",
-    "lib": ["ES2024"],
+    "lib": ["ES2025"],
     "types": ["node"],
     "declaration": true,
     "declarationMap": true,
