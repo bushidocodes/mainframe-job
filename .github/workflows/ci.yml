@@ -26,7 +26,7 @@ jobs:
       - name: Type-check
         run: pnpm exec tsc --noEmit
 
-      - name: Lint (ESLint + examples type-check)
+      - name: Lint (examples type-check)
         run: pnpm run lint
 
       - name: Test
