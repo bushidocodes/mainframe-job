@@ -1,5 +1,5 @@
 import { Readable, Writable } from "node:stream";
-import { Client, type AccessOptions } from "basic-ftp";
+import { type AccessOptions, Client } from "basic-ftp";
 
 /**
  * The slice of a `basic-ftp` {@link Client} that {@link JobEntrySubsystem}
@@ -73,10 +73,7 @@ function toUploadSource(input: JobInput): Readable | string {
 }
 
 /** Streams a remote file into memory and returns it as a single Buffer. */
-async function downloadToBuffer(
-  client: FtpClient,
-  remoteFileName: string,
-): Promise<Buffer> {
+async function downloadToBuffer(client: FtpClient, remoteFileName: string): Promise<Buffer> {
   const chunks: Buffer[] = [];
   const sink = new Writable({
     write(chunk: Buffer, _encoding, callback) {
