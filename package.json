@@ -38,15 +38,18 @@
   },
   "scripts": {
     "build": "tsc",
-    "lint": "tsc --project tsconfig.examples.json",
+    "lint": "biome check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "basic-ftp": "^6.0.1"
   },
   "devDependencies": {
+    "@biomejs/biome": "2.5.3",
     "@types/node": "^26.1.1",
     "typescript": "^7.0.2",
     "vitest": "^4.1.10"

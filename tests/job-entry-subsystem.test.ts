@@ -126,9 +126,9 @@ describe("JobEntrySubsystem.submitJob", () => {
   it("closes the connection and rejects when a step fails", async () => {
     const client = new FakeFtpClient(undefined, "uploadFrom");
 
-    await expect(
-      newSubsystem(client).submitJob(Buffer.from("//JOB"), "job.jcl"),
-    ).rejects.toThrow("uploadFrom failed");
+    await expect(newSubsystem(client).submitJob(Buffer.from("//JOB"), "job.jcl")).rejects.toThrow(
+      "uploadFrom failed",
+    );
     expect(client.closed).toBe(true);
     expect(client.calls).toContain("close");
     // The download must not run once the upload has failed.
